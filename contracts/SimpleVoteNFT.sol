@@ -8,9 +8,8 @@ import "solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SimpleVoteNFT is ERC721, Ownable {
-
     uint256 currentSupply;
-    mapping (address => uint256) votingPower; // 1 NFT = 1 vote
+    mapping(address => uint256) votingPower; // 1 NFT = 1 vote
 
     constructor() ERC721("Simple Vote NFT", "SV") {}
 
@@ -24,7 +23,7 @@ contract SimpleVoteNFT is ERC721, Ownable {
         }
     }
 
-    function transferFrom (
+    function transferFrom(
         address from,
         address to,
         uint256 id
@@ -33,7 +32,7 @@ contract SimpleVoteNFT is ERC721, Ownable {
         super.transferFrom(from, to, id);
     }
 
-    function safeTransferFrom (
+    function safeTransferFrom(
         address from,
         address to,
         uint256 id
@@ -42,19 +41,21 @@ contract SimpleVoteNFT is ERC721, Ownable {
         super.safeTransferFrom(from, to, id);
     }
 
-    function transferVotingPower (address from, address to) internal {
+    function transferVotingPower(address from, address to) internal {
         unchecked {
             votingPower[from]--;
             votingPower[to]++;
         }
     }
 
-    function getVotingPower (address user) external view returns (uint256) {
+    function getVotingPower(address user) external view returns (uint256) {
         return votingPower[user];
     }
 
-    function withdraw () external onlyOwner {
-        (bool success, bytes memory response) = owner().call{value: address(this).balance}("");
+    function withdraw() external onlyOwner {
+        (bool success, bytes memory response) = owner().call{
+            value: address(this).balance
+        }("");
         require(success);
     }
 
@@ -68,10 +69,5 @@ contract SimpleVoteNFT is ERC721, Ownable {
         return string(abi.encodePacked("ipfs://deadbeef/", id));
     }
 
-    receive () external payable {
-
-    }
-
-
-
+    receive() external payable {}
 }
